@@ -5,6 +5,7 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 
 public class HelloServer extends UnicastRemoteObject implements HelloWorld {
+    static int value = 0;
 
     public HelloServer() throws RemoteException {
         super();
@@ -21,6 +22,7 @@ public class HelloServer extends UnicastRemoteObject implements HelloWorld {
 
     public String hello() throws RemoteException {
         System.out.println("Executando hello()");
-        return "Hello!!!";
+        value ++;
+        return "Hello!!! "+value;
     }
 }

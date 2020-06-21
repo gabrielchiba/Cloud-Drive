@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Main (client)" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="br.ufms.facom.student.cloud.Main" />
+  <configuration default="false" name="Client" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="br.ufms.facom.student.cloud.cli.Client" />
     <module name="Cloud" />
     <option name="PROGRAM_PARAMETERS" value="localhost" />
     <RunnerSettings RunnerId="Run" />
