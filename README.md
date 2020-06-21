@@ -6,19 +6,17 @@ Certifique-se de possuir o JDK 11 ou mais recente instalado em sua máquina.
 
 Abra a pasta raiz ou o projeto (`Cloud.iml`) no Intellij IDEA Community Edition e clique em *Build > Build Project*.
 
-O executável será criado em `out/artifacts/Cloud/Cloud.jar`. No terminal faça:
+Os pacotes `.jar` serão criados em `out/artifacts/`.
+Para rodar o *servidor* no terminal, faça:
 
 ```bash
-$ cd out/artifacts/Cloud/
-$ rmiregistry -J-classpath -JCloud.jar &    # Serviço de registro do RMI em segundo plano
-$ java -jar Cloud.jar --server &            # Servidor Cloud em segundo plano
-$ java -jar Cloud.jar localhost             # Cliente Cloud
+$ cd out/artifacts/cloud_server/
+$ rmiregistry -J-classpath -Jcloud-server.jar &     # Serviço de registro do RMI em segundo plano
+$ java -jar cloud-server.jar /tmp/cloud-server      # Servidor Cloud em segundo plano
 ```
 
-Ou se preferir, abra três terminais na pasta `out/artifacts/Cloud/` e execute uma linha de comando por terminal:
-
-- `$ rmiregistry -J-classpath -JCloud.jar`
-- `java -jar Cloud.jar --server`
-- `java -jar Cloud.jar localhost`
-
-
+Para rodar o *cliente* no terminal, faça:
+```bash
+$ cd out/artifacts/cloud_client/
+$ java -jar cloud-client.jar localhost
+```
