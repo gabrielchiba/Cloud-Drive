@@ -2,9 +2,12 @@ package br.ufms.facom.student.cloud.cli;
 
 import br.ufms.facom.student.cloud.rmi.Drive;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -44,6 +47,8 @@ public class Client {
 
             switch (command) {
                 case "get": get(); break;
+                case "rm": remove(); break;
+                case "put": put(); break;
             }
         }
     }
@@ -64,4 +69,44 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    private void remove() {
+        var filename = mScanner.next();
+        System.out.println("Removing file "+filename);
+        Boolean response = false;
+
+        try{
+            response = mDrive.remove(filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (response)
+            System.out.println("Rm succeeded");
+        else
+            System.out.println("File \"" +filename+ "\" does not exist");
+    }
+
+    private void put() {
+        var stringpath = mScanner.next();
+        stringpath = stringpath.replaceAll("\\p{C}", "");
+        var filepath = Paths.get(stringpath);
+        var filename = filepath.getFileName().toString();
+        System.out.println("Putting file "+filename);
+
+        try {
+            var fileinput = new FileInputStream(stringpath);
+            //var filebytes = fileinput.readAllBytes();
+            
+            mDrive.put(filename, fileinput.readAllBytes());
+
+            fileinput.close();
+
+            System.out.println("Put succeeded");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
