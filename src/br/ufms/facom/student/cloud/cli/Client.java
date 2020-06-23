@@ -43,18 +43,20 @@ public class Client {
     public void run() {
         // Command loop
         while (mScanner.hasNext()) {
-            var command = mScanner.next().toLowerCase();
 
-            switch (command) {
-                case "get": get(); break;
-                case "rm": remove(); break;
-                case "put": put(); break;
+            var command = mScanner.nextLine().split(" "); // cmd = "ls a".split() = {"ls","a"}
+            var name = command.length < 2 ? "" : command[1];
+
+            switch (command[0]) {
+                case "get": get(name); break;
+                case "rm": remove(name); break;
+                case "put": put(name); break;
+                case "ls": list(name); break;
             }
         }
     }
 
-    private void get() {
-        var filename = mScanner.next();
+    private void get(String filename) {
         System.out.println("Getting file "+filename);
 
         try {
@@ -70,8 +72,7 @@ public class Client {
         }
     }
 
-    private void remove() {
-        var filename = mScanner.next();
+    private void remove(String filename) {
         System.out.println("Removing file "+filename);
         Boolean response = false;
 
@@ -87,8 +88,7 @@ public class Client {
             System.out.println("File \"" +filename+ "\" does not exist");
     }
 
-    private void put() {
-        var stringpath = mScanner.next();
+    private void put(String stringpath) {
         stringpath = stringpath.replaceAll("\\p{C}", "");
         var filepath = Paths.get(stringpath);
         var filename = filepath.getFileName().toString();
@@ -104,6 +104,17 @@ public class Client {
 
             System.out.println("Put succeeded");
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void list(String dirname) {
+        try{
+            var archivearray = mDrive.list(dirname);
+            for (String element : archivearray) {
+                System.out.println(element);
+            }
+        } catch (IOException e){
             e.printStackTrace();
         }
     }

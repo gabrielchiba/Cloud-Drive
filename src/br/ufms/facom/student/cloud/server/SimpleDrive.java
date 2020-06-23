@@ -42,9 +42,11 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
         return ret;
     }
 
-    // @Override
-    public String[] list(String path) {
-        return new String[0];
+    @Override
+    public String[] list(String path) throws IOException{
+        // FIXME Security flaw: client may use relative paths to access private files, e.g, "../../../some/file".
+        var fileindirectory = new File(mWorkingDirectory.getAbsolutePath(), path);
+        return fileindirectory.list();
     }
 
     // @Override

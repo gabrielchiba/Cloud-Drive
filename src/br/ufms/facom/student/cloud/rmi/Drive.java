@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 public interface Drive extends Remote {
     // void copy(String destination, String source);
     byte[] get(String filename) throws IOException;
-    // String[] list(String path);
+    String[] list(String path) throws IOException;
     // void move(String destination, String source);
     void put(String filename, byte[] data) throws IOException;
     Boolean remove(String filename) throws IOException;
