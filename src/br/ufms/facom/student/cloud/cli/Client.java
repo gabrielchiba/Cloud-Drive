@@ -46,12 +46,14 @@ public class Client {
 
             var command = mScanner.nextLine().split(" "); // cmd = "ls a".split() = {"ls","a"}
             var name = command.length < 2 ? "" : command[1];
+            var destination = command.length < 3 ? "" : command[2]; // cmd = "ls a".split() = {"ls","a", "destination"}
 
             switch (command[0]) {
                 case "get": get(name); break;
                 case "rm": remove(name); break;
                 case "put": put(name); break;
                 case "ls": list(name); break;
+                case "mv": move(name, destination); break;
             }
         }
     }
@@ -118,6 +120,16 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    private void move(String source, String destination) {
+        try{
+            mDrive.move(source, destination);
+            System.out.println("Move succeeded");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

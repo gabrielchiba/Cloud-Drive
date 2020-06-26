@@ -49,13 +49,31 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
         return fileindirectory.list();
     }
 
-    // @Override
-    public void move(String destination, String source) {
+    @Override
+    public void move(String source, String destination) throws IOException{
+        // FIXME Security flaw: client may use relative paths to access private files, e.g, "../../../some/file".
+        System.out.println("MV "+source+" TO "+destination);
+        var filesource = new File(mWorkingDirectory.getAbsolutePath(), source);
+        var filesourceInput = new FileInputStream(filesource);
+        var filesourcebytes = filesourceInput.readAllBytes();
+        filesourceInput.close();
 
+        var filename = filesource.getName();
+        var destinationfolder = new File(mWorkingDirectory.getAbsolutePath(), destination);
+
+        var filedestination = new File(destinationfolder, filename);
+        var filedestinationoutput = new FileOutputStream(filedestination);
+        filedestinationoutput.write(filesourcebytes);
+        filedestinationoutput.close();
+
+        if (filesource.exists()){
+            filesource.delete();
+        }
     }
 
-    // @Override
+    @Override
     public void put(String filename, byte[] data) throws IOException {
+        // FIXME Security flaw: client may use relative paths to access private files, e.g, "../../../some/file".
         var file = new File(mWorkingDirectory.getAbsolutePath(), filename);
         var fileoutput = new FileOutputStream(file);
         fileoutput.write(data);
