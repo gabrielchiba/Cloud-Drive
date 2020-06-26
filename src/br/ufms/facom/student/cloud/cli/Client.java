@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class Client {
@@ -55,7 +56,7 @@ public class Client {
                 case "ls": list(name); break;
                 case "mv": move(name, destination); break;
                 case "cp": copy(name, destination); break;
-                case "hash": move(name, destination); break;
+                case "hash": hash(name); break;
             }
         }
     }
@@ -137,6 +138,15 @@ public class Client {
             mDrive.copy(source, destination);
             System.out.println("Copy succeeded");
         } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void hash(String filename) {
+        try{
+            var hashcode = mDrive.hash(filename);
+            System.out.println("HASH in MD5 of \"" +filename+ "\" is: "+hashcode);
+        } catch (IOException | NoSuchAlgorithmException e){
             e.printStackTrace();
         }
     }
