@@ -97,4 +97,11 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
         }
         return ret;
     }
+
+    @Override
+    public void hash(String filename) throws IOException {
+        // FIXME Security flaw: client may use relative paths to access private files, e.g, "../../../some/file".
+        var file = new File(mWorkingDirectory.getAbsolutePath(), filename);
+        ////////////////// A completar
+    }
 }

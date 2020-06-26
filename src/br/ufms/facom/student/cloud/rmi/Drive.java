@@ -11,4 +11,5 @@ public interface Drive extends Remote {
     void move(String source, String destination) throws IOException;
     void put(String filename, byte[] data) throws IOException;
     Boolean remove(String filename) throws IOException;
+    void hash(String filename) throws IOException;
 }
