@@ -54,6 +54,8 @@ public class Client {
                 case "put": put(name); break;
                 case "ls": list(name); break;
                 case "mv": move(name, destination); break;
+                case "cp": copy(name, destination); break;
+                case "hash": move(name, destination); break;
             }
         }
     }
@@ -125,6 +127,15 @@ public class Client {
         try{
             mDrive.move(source, destination);
             System.out.println("Move succeeded");
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void copy(String source, String destination) {
+        try{
+            mDrive.copy(source, destination);
+            System.out.println("Copy succeeded");
         } catch (IOException e){
             e.printStackTrace();
         }
