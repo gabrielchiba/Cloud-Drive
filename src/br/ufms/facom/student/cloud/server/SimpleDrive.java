@@ -12,9 +12,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 
 public class SimpleDrive extends UnicastRemoteObject implements Drive {
-    public static final String[] FORBIDDEN_FILENAMES = {".", ".."};
+    public static final String[] FORBIDDEN_FILENAMES = {".", ".."};;
 
     private final Path mDriveDirectory;
     // private final File mLockFile;
@@ -46,8 +47,10 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
     public Path convertToLocalPath(String path) throws FileNotFoundException {
         var filePath = mDriveDirectory.resolve(Paths.get(path)).normalize();
 
-        if (!filePath.startsWith(mDriveDirectory))
+        if (!filePath.startsWith(mDriveDirectory)) {
+            System.out.println("Client attempt to access files outside drive directory!");
             throw new FileNotFoundException();
+        }
 
         return filePath;
     }
@@ -106,7 +109,9 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
     public Boolean remove(String filename) throws IOException {
         //System.out.println("RM "+filename);
         var file = convertToLocalPath(filename).toFile();
+
         System.out.println("RM "+file);
+
         Boolean ret = file.exists();
         if (file.exists()){
             file.delete();

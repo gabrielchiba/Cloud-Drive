@@ -12,7 +12,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
+import java.util.*;
+import java.util.function.UnaryOperator;
 
 public class Client {
     public static final String USAGE =
@@ -41,22 +42,42 @@ public class Client {
         mScanner = commandScanner;
     }
 
+    /**
+     * Runs an input loop listening for commands. Here is the grammar:
+     *
+     * Command  : Copy | Get | Hash | List | Move | Put | Remove | Exit
+     *
+     * List     : "ls"      [dirname]
+     * Get      : "get"     filename
+     * Put      : "put"     filename
+     * Hash     : "hash"    filename
+     * Remove   : "rm"      filename
+     * Copy     : "cp"      source      destination
+     * Move     : "mv"      source      destination
+     *
+     */
     public void run() {
         // Command loop
         while (mScanner.hasNext()) {
+            // cmd = "ls a".split() = {"ls","a"}
+            var cmd = Arrays.asList(mScanner.nextLine().split(" "))
+                    .stream()
+                    .filter(s -> !s.isEmpty()) // discard empty tokens
+                    .iterator();
 
-            var command = mScanner.nextLine().split(" "); // cmd = "ls a".split() = {"ls","a"}
-            var name = command.length < 2 ? "" : command[1];
-            var destination = command.length < 3 ? "" : command[2]; // cmd = "ls a".split() = {"ls","a", "destination"}
+            // cmd.forEachRemaining(s -> System.out.println("e: "+s));
 
-            switch (command[0]) {
-                case "get": get(name); break;
-                case "rm": remove(name); break;
-                case "put": put(name); break;
-                case "ls": list(name); break;
-                case "mv": move(name, destination); break;
-                case "cp": copy(name, destination); break;
-                case "hash": hash(name); break;
+            switch (cmd.next()) {
+                case "ls":
+                    list(cmd.hasNext() ? cmd.next() : "");
+                    break;
+                case "get": get(cmd.next()); break;
+                case "put": put(cmd.next()); break;
+                case "hash": hash(cmd.next()); break;
+                case "rm": remove(cmd.next()); break;
+                case "cp": copy(cmd.next(), cmd.next()); break;
+                case "mv": move(cmd.next(), cmd.next()); break;
+                case "exit": return;
             }
         }
     }
@@ -79,7 +100,7 @@ public class Client {
 
     private void remove(String filename) {
         System.out.println("Removing file "+filename);
-        Boolean response = false;
+        var response = false;
 
         try{
             response = mDrive.remove(filename);
@@ -150,7 +171,4 @@ public class Client {
             e.printStackTrace();
         }
     }
-
 }
-
-
