@@ -69,7 +69,7 @@ public class Client {
 
             switch (cmd.next()) {
                 case "ls":
-                    list(cmd.hasNext() ? cmd.next() : "");
+                    list(getdestination(cmd));
                     break;
                 case "get": get(cmd.next()); break;
                 case "put": put(cmd.next(), getdestination(cmd)); break;
@@ -83,9 +83,12 @@ public class Client {
     }
 
     private String getdestination(Iterator cmd){
-        var result = cmd.next().toString();
-        if(result.equals("/") || result.equals("\\")){
-            result = "";
+        var result = "";
+        if(cmd.hasNext()){
+            result = cmd.next().toString();
+            if(result.equals("/") || result.equals("\\")){
+               result = "";
+            }
         }
         return result;
     }
