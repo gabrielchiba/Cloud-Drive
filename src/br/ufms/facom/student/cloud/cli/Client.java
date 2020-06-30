@@ -72,7 +72,7 @@ public class Client {
                     list(cmd.hasNext() ? cmd.next() : "");
                     break;
                 case "get": get(cmd.next()); break;
-                case "put": put(cmd.next()); break;
+                case "put": put(cmd.next(), cmd.next()); break;
                 case "hash": hash(cmd.next()); break;
                 case "rm": remove(cmd.next()); break;
                 case "cp": copy(cmd.next(), cmd.next()); break;
@@ -114,7 +114,7 @@ public class Client {
             System.out.println("File \"" +filename+ "\" does not exist");
     }
 
-    private void put(String stringpath) {
+    private void put(String stringpath, String destination) {
         stringpath = stringpath.replaceAll("\\p{C}", "");
         var filepath = Paths.get(stringpath);
         var filename = filepath.getFileName().toString();
@@ -124,7 +124,7 @@ public class Client {
             var fileinput = new FileInputStream(stringpath);
             //var filebytes = fileinput.readAllBytes();
             
-            mDrive.put(filename, fileinput.readAllBytes());
+            mDrive.put(filename, fileinput.readAllBytes(), destination);
 
             fileinput.close();
 

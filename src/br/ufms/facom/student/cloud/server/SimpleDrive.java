@@ -98,9 +98,13 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
     }
 
     @Override
-    public void put(String filename, byte[] data) throws IOException {
-        var file = convertToLocalPath(filename).toFile();
-        var fileoutput = new FileOutputStream(file);
+    public void put(String filename, byte[] data, String destination) throws IOException {
+        System.out.println("PUT "+filename+" IN "+destination);
+
+        var destinationfolder = convertToLocalPath(destination).toFile();
+        var filedestination = new File(destinationfolder, filename);
+
+        var fileoutput = new FileOutputStream(filedestination);
         fileoutput.write(data);
         fileoutput.close();
     }
