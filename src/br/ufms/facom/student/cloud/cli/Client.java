@@ -72,14 +72,22 @@ public class Client {
                     list(cmd.hasNext() ? cmd.next() : "");
                     break;
                 case "get": get(cmd.next()); break;
-                case "put": put(cmd.next(), cmd.next()); break;
+                case "put": put(cmd.next(), getdestination(cmd)); break;
                 case "hash": hash(cmd.next()); break;
                 case "rm": remove(cmd.next()); break;
-                case "cp": copy(cmd.next(), cmd.next()); break;
-                case "mv": move(cmd.next(), cmd.next()); break;
+                case "cp": copy(cmd.next(), getdestination(cmd)); break;
+                case "mv": move(cmd.next(), getdestination(cmd)); break;
                 case "exit": return;
             }
         }
+    }
+
+    private String getdestination(Iterator cmd){
+        var result = cmd.next().toString();
+        if(result.equals("/") || result.equals("\\")){
+            result = "";
+        }
+        return result;
     }
 
     private void get(String filename) {
