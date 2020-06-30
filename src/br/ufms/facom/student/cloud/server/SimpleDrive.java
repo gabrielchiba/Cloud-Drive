@@ -12,10 +12,11 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.RandomAccess;
 import java.util.logging.Logger;
 
 public class SimpleDrive extends UnicastRemoteObject implements Drive {
-    public static final String[] FORBIDDEN_FILENAMES = {".", ".."};;
 
     private final Path mDriveDirectory;
     // private final File mLockFile;
@@ -143,5 +144,25 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
         var valuedecoded = valuedecodedconstructor.toString().toLowerCase(); // value in string
         System.out.println("HASH in MD5 of "+filename+" is: " +valuedecoded);
         return valuedecoded;
+    }
+
+    @Override
+    public byte[] getChunk(String filename, int position, int length) throws IOException {
+        try (var stream = new RandomAccessFile(convertToLocalPath(filename).toFile(), "r")) {
+            var buffer = new byte[length];
+            stream.seek(position);
+            var n = stream.read(buffer);
+            if (n < 0)
+                return null;
+            return Arrays.copyOf(buffer, n);
+        }
+    }
+
+    @Override
+    public void putChunk(String filename, int position, byte[] data) throws IOException {
+        try (var stream = new RandomAccessFile(convertToLocalPath(filename).toFile(), "rw")) {
+            stream.seek(position);
+            stream.write(data);
+        }
     }
 }
