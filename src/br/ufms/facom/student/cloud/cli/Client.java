@@ -1,5 +1,6 @@
 package br.ufms.facom.student.cloud.cli;
 
+import br.ufms.facom.student.cloud.client.RemoteInputStream;
 import br.ufms.facom.student.cloud.rmi.Drive;
 
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -71,8 +73,8 @@ public class Client {
                 case "ls":
                     list(getdestination(cmd));
                     break;
-                case "get": get(cmd.next()); break;
                 case "put": put(cmd.next(), getdestination(cmd)); break;
+                case "get": get2(cmd.next()); break;
                 case "hash": hash(cmd.next()); break;
                 case "rm": remove(cmd.next()); break;
                 case "cp": copy(cmd.next(), getdestination(cmd)); break;
@@ -99,7 +101,7 @@ public class Client {
         try {
             var data = mDrive.get(filename);
 
-            var file = new FileOutputStream("outfile");
+            var file = new FileOutputStream(Path.of(filename).getFileName().toString());
             file.write(data);
             file.close();
 
@@ -179,6 +181,20 @@ public class Client {
             var hashcode = mDrive.hash(filename);
             System.out.println("HASH in MD5 of \"" +filename+ "\" is: "+hashcode);
         } catch (IOException | NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void get2(String filename) {
+        System.out.println("Getting file "+filename);
+
+        try (var remote = new RemoteInputStream(mDrive, filename);
+             var local = new FileOutputStream(Path.of(filename).getFileName().toString())) {
+
+            remote.transferTo(local);
+
+            System.out.println("Get succeeded");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
