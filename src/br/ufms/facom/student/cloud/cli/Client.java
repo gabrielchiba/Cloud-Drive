@@ -1,12 +1,10 @@
 package br.ufms.facom.student.cloud.cli;
 
 import br.ufms.facom.student.cloud.client.RemoteInputStream;
+import br.ufms.facom.student.cloud.client.RemoteOutputStream;
 import br.ufms.facom.student.cloud.rmi.Drive;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,7 +71,7 @@ public class Client {
                 case "ls":
                     list(getdestination(cmd));
                     break;
-                case "put": put(cmd.next(), getdestination(cmd)); break;
+                case "put": put2(cmd.next(), getdestination(cmd)); break;
                 case "get": get2(cmd.next()); break;
                 case "hash": hash(cmd.next()); break;
                 case "rm": remove(cmd.next()); break;
@@ -194,6 +192,20 @@ public class Client {
             remote.transferTo(local);
 
             System.out.println("Get succeeded");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void put2(String filename, String destination) {
+        System.out.println("Putting file "+filename);
+
+        try (var local = new FileInputStream(filename);
+             var remote = new RemoteOutputStream(mDrive, destination)) {
+
+            local.transferTo(remote);
+
+            System.out.println("Put succeeded");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -151,7 +151,7 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
     }
 
     @Override
-    public byte[] getChunk(String filename, int position, int length) throws IOException {
+    public byte[] getChunk(String filename, long position, int length) throws IOException {
         try (var stream = new RandomAccessFile(convertToLocalPath(filename).toFile(), "r")) {
             var buffer = new byte[length];
             stream.seek(position);
@@ -163,7 +163,7 @@ public class SimpleDrive extends UnicastRemoteObject implements Drive {
     }
 
     @Override
-    public void putChunk(String filename, int position, byte[] data) throws IOException {
+    public void putChunk(String filename, long position, byte[] data) throws IOException {
         try (var stream = new RandomAccessFile(convertToLocalPath(filename).toFile(), "rw")) {
             stream.seek(position);
             stream.write(data);

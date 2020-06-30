@@ -8,11 +8,11 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 public class RemoteOutputStream extends OutputStream implements Closeable {
-    private static final int BUFFER_SIZE = 1 * 1024576;
+    private static final int BUFFER_SIZE = 4 * 1048576;
 
     private Drive mDrive;
     private String mFilename;
-    private int mPosition;
+    private long mPosition;
 
     private byte[] mBuffer;
     private int mBufferPosition;
@@ -34,9 +34,8 @@ public class RemoteOutputStream extends OutputStream implements Closeable {
 
     private void flushBuffer() throws IOException {
         mDrive.putChunk(mFilename, mPosition, Arrays.copyOf(mBuffer, mBufferPosition));
-        mBufferPosition = 0;
-
         mPosition += mBufferPosition;
+        mBufferPosition = 0;
     }
 
     @Override
@@ -45,7 +44,7 @@ public class RemoteOutputStream extends OutputStream implements Closeable {
             flushBuffer();
         }
 
-        mBuffer[mBufferPosition] = (byte) i;
+        mBuffer[mBufferPosition] = (byte) (i & 0xFF);
         mBufferPosition++;
     }
 }

@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class RemoteInputStream extends InputStream {
-    private static final int BUFFER_SIZE = 4 * 1024576;
+    private static final int BUFFER_SIZE = 4 * 1048576;
 
     private Drive mDrive;
     private String mFilename;
-    private int mPosition;
+    private long mPosition;
 
     private byte[] mBuffer;
     private int mBufferPosition;

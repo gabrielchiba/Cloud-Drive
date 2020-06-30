@@ -14,6 +14,6 @@ public interface Drive extends Remote {
     Boolean remove(String filename) throws IOException;
     String hash(String filename) throws IOException, NoSuchAlgorithmException;
 
-    byte[] getChunk(String filename, int position, int length) throws IOException;
-    void putChunk(String filename, int position, byte data[]) throws IOException;
+    byte[] getChunk(String filename, long position, int length) throws IOException;
+    void putChunk(String filename, long position, byte data[]) throws IOException;
 }
